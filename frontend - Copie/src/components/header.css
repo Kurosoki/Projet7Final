@@ -1,0 +1,40 @@
+header {
+    border-bottom: solid 1px grey;
+    width: 100%;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: center;
+
+}
+
+.logo {
+    margin-left: 5%;
+    height: 5em;
+}
+
+.logo img {
+    width: 200%;
+    height: 100%;
+    object-fit: cover;
+}
+
+nav {
+    margin-right: 10%;
+    display: block;
+}
+
+ul {
+    list-style: none;
+    display: flex;
+}
+
+ul li {
+    margin-right: 25%;
+}
+
+
+a {
+    text-decoration: none;
+    color: black;
+}

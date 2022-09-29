@@ -1,7 +1,7 @@
 /* Import des modules necessaires */
 const mongoose = require("mongoose");
 
-/* Schema User */
+/* Schema Post */
 const ModelPost = mongoose.Schema({
     userId: { type: String, required: true },
     text: { type: String, required: true },

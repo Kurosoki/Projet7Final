@@ -4,6 +4,9 @@ import { useNavigate } from 'react-router-dom';
 import { accountService } from "@/_services/account.service";
 import { postService } from "@/_services/post.services"
 import reactImageSize from 'react-image-size';
+import { useParams } from 'react-router-dom';
+import Axios from '@/_services/caller.service';
+
 
 const Modifypost = () => {
     const [msg, setMsg] = useState('');
@@ -14,6 +17,13 @@ const Modifypost = () => {
         title: "",
         text: ""
     }
+
+    let getPost = (post) => {
+        return Axios.get('/api/posts/' + post.id)
+    }
+
+    const { id } = useParams();
+    const post = getPost(id);
 
     const retour = () => {
         navigate("/home", { replace: true })
@@ -27,7 +37,7 @@ const Modifypost = () => {
         formData.append('userId', profil.userId);
 
         try {
-            postService.createPost(formData)
+            postService.getPost(formData)
                 .then(response => {
                     navigate("/home", { replace: true });
                 })

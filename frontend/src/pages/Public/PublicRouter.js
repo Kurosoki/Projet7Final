@@ -10,7 +10,7 @@ const PublicRouter = () => {
         <Routes>
             <Route path="home" element={<Home />} />
             <Route path="addpost" element={<Addpost />} />
-            <Route path="modifypost" element={<Modifypost />} />
+            <Route path="modifypost/:id" element={<Modifypost />} />
             <Route path="*" element={<Error />} />
         </Routes>
 

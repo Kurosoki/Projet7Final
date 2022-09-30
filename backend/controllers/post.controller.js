@@ -57,7 +57,7 @@ exports.getAllPost = (req, res, next) => {
 /* Controleur recuperation 1 post */
 exports.getOnePost = async (req, res, next) => {
 
-    const GetPost = await Post.findOne({ _id: req.params.id })
+    const GetPost = await Post.findOne({ id: req.body.id })
     const GetUser = await Users.findOne({ _id: GetPost.userId })
 
     let PostCompiled = {
@@ -79,9 +79,9 @@ exports.deletePost = (req, res, next) => {
                     error: new Error('No such Post!')
                 });
             }
-
+            console.log(post)
             if (post.imageUrl) {
-                const filename = post.imageUrl.split("/images/postImg/")[1];
+                const filename = post.imageUrl;
                 fs.unlink(`images/postImg/${filename}`, () => {
 
                     Post.deleteOne({ _id: req.params.id })
@@ -102,28 +102,29 @@ exports.deletePost = (req, res, next) => {
 /* Controleur modification post */
 exports.modifyPost = (req, res, next) => {
     // Recup post avec id
-    Post.findOne({ _id: req.params.id })
+
+    Post.findOne().where({ _id: req.body.id })
+
         .then((post) => {
             // Enregistrement ancienne imgUrl (si nouvelle image dans modif)
             const oldUrl = post.imageUrl;
 
             const postObject = req.file ? {
                 ...req.body,
-                imageUrl: `${req.protocol}://${req.get('host')}/images/postImg/${req.file.filename}`
+                imageUrl: `${req.file.filename}`
             } : { ...req.body, imageUrl: oldUrl };
 
             if (req.file) {
-
-                let splitUrl = oldUrl.split("images/postImg/")[1];
+                console.log(oldUrl)
+                let splitUrl = oldUrl;
 
                 fs.unlink(`./images/postImg/${splitUrl}`, () => {
-
-                    Post.updateOne({ _id: req.params.id }, { ...postObject, _id: req.params.id })
+                    Post.updateOne({ _id: req.body.id }, { ...postObject, _id: req.body.id })
                         .then(() => res.status(200).json({ message: 'Post modifié !' }))
                         .catch(error => res.status(400).json({ error }));
                 });
             } else {
-                Post.updateOne({ _id: req.params.id }, { ...postObject, _id: req.params.id })
+                Post.updateOne({ _id: req.body.id }, { ...postObject, _id: req.body.id })
                     .then(() => res.status(200).json({ message: 'Post modifié !' }))
                     .catch(error => res.status(400).json({ error }));
             }
@@ -133,25 +134,28 @@ exports.modifyPost = (req, res, next) => {
 
 /* Controleur like */
 exports.likePost = (req, res, next) => {
-    console.log(req.body)
 
-    Post.findOne({ id: req.params.id })
+    Post.findOne().where({ _id: req.body.id })
         .then(post => {
-            console.log(post)
-            /* like d'une post */
-            if (!post.usersLiked.includes(req.body.userId) && req.body.like === "1") {
-                Post.updateOne({ id: req.params.id }, { $inc: { likes: 1 }, $push: { usersLiked: req.body.userId } })
-                    .then(() => res.status(200).json({ message: 'post liked !' }))
-                    .catch(error => res.status(400).json({ error }));
-            }
-            if (post.usersLiked.includes(req.body.userId) && req.body.like === "-1") {
-                Post.updateOne({ id: req.params.id }, { $inc: { likes: -1 }, $pull: { usersLiked: req.body.userId } })
+            /*condition dislike like d'un post */
+            if (!post.usersLiked.includes(req.body.userId) && req.body.likes === 1) {
+
+                Post.updateOne({ _id: req.body.id }, { $inc: { likes: 1 }, $push: { usersLiked: req.body.userId } })
                     .then(() => res.status(200).json({ message: 'post unliked !' }))
                     .catch(error => res.status(400).json({ error }));
             }
+            if (post.usersLiked.includes(req.body.userId) && req.body.likes === -1) {
+                Post.updateOne({ _id: req.body.id }, { $inc: { likes: -1 }, $pull: { usersLiked: req.body.userId } })
+                    .then(() => res.status(200).json({ message: 'post unliked !' }))
+                    .catch(error => res.status(400).json({ error }));
+
+
+            }
+
 
         })
         .catch(error => res.status(500).json({ error }));
+
 };
 
 

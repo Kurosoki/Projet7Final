@@ -11,8 +11,8 @@ const GuardMulter = require("../middleware/GuardMulterPost");
 router.get("/", GuardAuth, postCtrl.getAllPost);
 router.get("/:id", GuardAuth, postCtrl.getOnePost);
 router.post("/", GuardAuth, GuardMulter, postCtrl.createPost);
-router.put("/:id", GuardAuth, GuardMulter, postCtrl.modifyPost);
+router.put("/", GuardAuth, GuardMulter, postCtrl.modifyPost);
 router.delete("/:id", GuardAuth, postCtrl.deletePost);
-router.post("/:id/like", GuardAuth, postCtrl.likePost);
+router.post("/like", GuardAuth, postCtrl.likePost);
 
 module.exports = router;

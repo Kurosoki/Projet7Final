@@ -25,3 +25,5 @@ Lancer le front avec la commande : npm run starto
 si un message d'erreur apparait, faite les commandes suivantes :
 
 npm i typescript link typescript npm run starto
+
+PS: En cas d'erreur lié au package timeago.js, cloner le repos d'origine dans le dossier du package du répertoire node_modules : https://github.com/hustcc/timeago.js
